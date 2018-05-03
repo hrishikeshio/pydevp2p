@@ -1,8 +1,6 @@
 from __future__ import print_function
 import struct
 import rlp
-from eth_utils import encode_hex as encode_hex_0x
-from eth_utils import decode_hex as decode_hex_0x
 import collections
 import sys
 import binascii
