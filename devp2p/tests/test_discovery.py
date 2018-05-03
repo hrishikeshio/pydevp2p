@@ -2,8 +2,7 @@ from devp2p import discovery
 from devp2p import kademlia
 from devp2p import crypto
 from devp2p.app import BaseApp
-from rlp.utils import decode_hex, encode_hex
-from devp2p.utils import remove_chars
+from devp2p.utils import remove_chars, decode_hex, encode_hex
 import pytest
 import gevent
 import random

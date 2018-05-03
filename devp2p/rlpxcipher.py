@@ -4,14 +4,13 @@ import struct
 import os
 import rlp
 from rlp import sedes
-from rlp.utils import safe_ord, str_to_bytes, ascii_chr
 from devp2p.crypto import sha3
 from Crypto.Hash import keccak
 from devp2p.crypto import ECCx
 from devp2p.crypto import ecdsa_recover
 from devp2p.crypto import ecdsa_verify
 import pyelliptic
-from devp2p.utils import ienc  # integer encode
+from devp2p.utils import safe_ord, str_to_bytes, ascii_chr, ienc  # integer encode
 import Crypto.Cipher.AES as AES
 
 sha3_256 = lambda x: keccak.new(digest_bits=256, update_after_digest=True, data=x)

@@ -1,8 +1,7 @@
 from devp2p.rlpxcipher import RLPxSession, FormatError
 from devp2p.crypto import mk_privkey, ECCx, sha3
 from devp2p.multiplexer import Multiplexer, Packet
-from devp2p.utils import remove_chars
-from rlp.utils import decode_hex, str_to_bytes
+from devp2p.utils import remove_chars, decode_hex, str_to_bytes
 import struct
 
 
@@ -60,16 +59,16 @@ def test_many_sessions():
 
 
 eip8_values = dict(
-    key_a     = decode_hex(b'49a7b37aa6f6645917e7b807e9d1c00d4fa71f18343b0d4122a4d2df64dd6fee'),
-    key_b     = decode_hex(b'b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291'),
-    pub_a     = decode_hex(b'fda1cff674c90c9a197539fe3dfb53086ace64f83ed7c6eabec741f7f381cc803e52ab2cd55d5569bce4347107a310dfd5f88a010cd2ffd1005ca406f1842877'),
-    pub_b     = decode_hex(b'ca634cae0d49acb401d8a4c6b6fe8c55b70d115bf400769cc1400f3258cd31387574077f301b421bc84df7266c44e9e6d569fc56be00812904767bf5ccd1fc7f'),
-    eph_key_a = decode_hex(b'869d6ecf5211f1cc60418a13b9d870b22959d0c16f02bec714c960dd2298a32d'),
-    eph_key_b = decode_hex(b'e238eb8e04fee6511ab04c6dd3c89ce097b11f25d584863ac2b6d5b35b1847e4'),
-    eph_pub_a = decode_hex(b'654d1044b69c577a44e5f01a1209523adb4026e70c62d1c13a067acabc09d2667a49821a0ad4b634554d330a15a58fe61f8a8e0544b310c6de7b0c8da7528a8d'),
-    eph_pub_b = decode_hex(b'b6d82fa3409da933dbf9cb0140c5dde89f4e64aec88d476af648880f4a10e1e49fe35ef3e69e93dd300b4797765a747c6384a6ecf5db9c2690398607a86181e4'),
-    nonce_a   = decode_hex(b'7e968bba13b6c50e2c4cd7f241cc0d64d1ac25c7f5952df231ac6a2bda8ee5d6'),
-    nonce_b   = decode_hex(b'559aead08264d5795d3909718cdd05abd49572e84fe55590eef31a88a08fdffd'),
+    key_a     = decode_hex('49a7b37aa6f6645917e7b807e9d1c00d4fa71f18343b0d4122a4d2df64dd6fee'),
+    key_b     = decode_hex('b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291'),
+    pub_a     = decode_hex('fda1cff674c90c9a197539fe3dfb53086ace64f83ed7c6eabec741f7f381cc803e52ab2cd55d5569bce4347107a310dfd5f88a010cd2ffd1005ca406f1842877'),
+    pub_b     = decode_hex('ca634cae0d49acb401d8a4c6b6fe8c55b70d115bf400769cc1400f3258cd31387574077f301b421bc84df7266c44e9e6d569fc56be00812904767bf5ccd1fc7f'),
+    eph_key_a = decode_hex('869d6ecf5211f1cc60418a13b9d870b22959d0c16f02bec714c960dd2298a32d'),
+    eph_key_b = decode_hex('e238eb8e04fee6511ab04c6dd3c89ce097b11f25d584863ac2b6d5b35b1847e4'),
+    eph_pub_a = decode_hex('654d1044b69c577a44e5f01a1209523adb4026e70c62d1c13a067acabc09d2667a49821a0ad4b634554d330a15a58fe61f8a8e0544b310c6de7b0c8da7528a8d'),
+    eph_pub_b = decode_hex('b6d82fa3409da933dbf9cb0140c5dde89f4e64aec88d476af648880f4a10e1e49fe35ef3e69e93dd300b4797765a747c6384a6ecf5db9c2690398607a86181e4'),
+    nonce_a   = decode_hex('7e968bba13b6c50e2c4cd7f241cc0d64d1ac25c7f5952df231ac6a2bda8ee5d6'),
+    nonce_b   = decode_hex('559aead08264d5795d3909718cdd05abd49572e84fe55590eef31a88a08fdffd'),
 )
 
 eip8_handshakes = [
@@ -192,14 +191,14 @@ def test_eip8_key_derivation():
     responder.encrypt_auth_ack_message(ack)
 
     responder.setup_cipher()
-    want_aes_secret = decode_hex(b'80e8632c05fed6fc2a13b0f8d31a3cf645366239170ea067065aba8e28bac487')
-    want_mac_secret = decode_hex(b'2ea74ec5dae199227dff1af715362700e989d889d7a493cb0639691efb8e5f98')
+    want_aes_secret = decode_hex('80e8632c05fed6fc2a13b0f8d31a3cf645366239170ea067065aba8e28bac487')
+    want_mac_secret = decode_hex('2ea74ec5dae199227dff1af715362700e989d889d7a493cb0639691efb8e5f98')
     assert responder.aes_secret == want_aes_secret
     assert responder.mac_secret == want_mac_secret
 
     responder.ingress_mac.update(b'foo')
     mac_digest = responder.ingress_mac.digest()
-    want_mac_digest = decode_hex(b'0c7ec6340062cc46f5e9f1e3cf86f8c8c403c5a0964f5df0ebd34a75ddc86db5')
+    want_mac_digest = decode_hex('0c7ec6340062cc46f5e9f1e3cf86f8c8c403c5a0964f5df0ebd34a75ddc86db5')
     assert mac_digest == want_mac_digest
 
 def test_auth_ack_is_eip8_for_eip8_auth():

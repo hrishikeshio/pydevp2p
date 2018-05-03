@@ -1,13 +1,18 @@
 from __future__ import print_function
 import struct
 import rlp
-from rlp.utils import encode_hex, decode_hex, str_to_bytes, bytes_to_str
-from rlp.utils import safe_ord
+from eth_utils import encode_hex as encode_hex_0x
+from eth_utils import decode_hex as decode_hex_0x
 import collections
 import sys
+import binascii
 
 ienc = int_to_big_endian = rlp.sedes.big_endian_int.serialize
 
+ALL_BYTES = tuple(
+    struct.pack('B', i)
+    for i in range(256)
+)
 
 def big_endian_to_int(s):
     return rlp.sedes.big_endian_int.deserialize(s.lstrip(b'\x00'))
@@ -23,6 +28,115 @@ ienc4 = int_to_big_endian4
 
 
 node_uri_scheme = 'enode://'
+
+PY3 = sys.version_info[0] >= 3
+
+if PY3:
+    def is_integer(x): return isinstance(x, int)
+
+    def is_string(x): return isinstance(x, bytes)
+
+    def bytes_to_str(value):
+        if isinstance(value, str):
+            return value
+        return value.decode('utf-8')
+
+    def int_to_bytes(value):
+        if isinstance(value, bytes):
+            return value
+        return int_to_big_endian(value)
+
+    def to_string_for_regexp(value):
+        return str(to_string(value), 'utf-8')
+    unicode = str
+
+    def bytearray_to_bytestr(value):
+        return bytes(value)
+
+    def encode_int32(value):
+        return value.to_bytes(32, byteorder='big')
+
+    def bytes_to_int(value):
+        return int.from_bytes(value, byteorder='big')
+
+    def str_to_bytes(value):
+        if isinstance(value, bytearray):
+            value = bytes(value)
+        if isinstance(value, bytes):
+            return value
+        return bytes(value, 'utf-8')
+
+    def encode_hex(value):
+        if isinstance(value, str):
+            value = bytes(value, 'utf-8')
+        if isinstance(value, (bytes, bytearray)):
+            return str(binascii.hexlify(value), 'utf-8')
+        raise TypeError('Value must be an instance of str or bytes')
+
+    def decode_hex(value):
+        if isinstance(value, str):
+            return bytes.fromhex(value)
+        if isinstance(value, (bytes, bytearray)):
+            return binascii.unhexlify(value)
+        raise TypeError('Value must be an instance of str or bytes')
+
+    def ascii_chr(value):
+        return bytes([value])
+
+    def safe_ord(value):
+        try:
+            return ord(value)
+        except TypeError:
+            assert isinstance(value, int)
+            return value
+
+else:
+    def is_integer(x): return isinstance(x, (int, long))
+
+    def is_string(x): return isinstance(x, (str, unicode))
+
+    def bytes_to_str(value):
+        return str(value)
+
+    def int_to_bytes(value):
+        if isinstance(value, str):
+            return value
+        return int_to_big_endian(value)
+
+    def to_string_for_regexp(value):
+        return str(value)
+    unicode = unicode
+
+    def bytearray_to_bytestr(value):
+        return bytes(''.join(chr(c) for c in value))
+
+    def encode_int32(v):
+        return zpad(int_to_big_endian(v), 32)
+
+    def bytes_to_int(value):
+        return big_endian_to_int(bytes(''.join(chr(c) for c in value)))
+
+    def str_to_bytes(value):
+        if isinstance(value, (bytes, bytearray)):
+            return bytes(value)
+        elif isinstance(value, unicode):
+            return codecs.encode(value, 'utf8')
+        else:
+            raise TypeError("Value must be text, bytes, or bytearray")
+
+    def encode_hex(s):
+        if isinstance(s, bytearray):
+            s = str(s)
+        if not isinstance(s, (str, unicode)):
+            raise TypeError('Value must be an instance of str or unicode')
+        return s.encode('hex')
+
+    def decode_hex(s):
+        if isinstance(s, bytearray):
+            s = str(s)
+        if not isinstance(s, (str, unicode)):
+            raise TypeError('Value must be an instance of str or unicode')
+        return s.decode('hex')
 
 
 def host_port_pubkey_from_uri(uri):
@@ -42,9 +156,6 @@ def host_port_pubkey_to_uri(host, port, pubkey):
                               bytes_to_str(encode_hex(pubkey)),
                               str(host), port)
     return str_to_bytes(uri)
-
-
-PY3 = sys.version_info[0] >= 3
 
 
 def remove_chars(s, chars):
@@ -92,10 +203,8 @@ colors += ['\033[4%dm' % i for i in range(1, 8)]
 def cstr(num, txt):
     return '%s%s%s' % (colors[num % len(colors)], txt, COLOR_END)
 
-
 def cprint(num, txt):
     print(cstr(num, txt))
-
 
 def phx(x):
     return encode_hex(x)[:8]

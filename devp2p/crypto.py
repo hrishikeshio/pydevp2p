@@ -25,7 +25,7 @@ if 'pyelliptic' not in dir() or not CIPHERNAMES.issubset(set(pyelliptic.Cipher.g
 
 import bitcoin
 from Crypto.Hash import keccak
-from rlp.utils import str_to_bytes, safe_ord, ascii_chr
+from devp2p.utils import str_to_bytes, safe_ord, ascii_chr
 sha3_256 = lambda x: keccak.new(digest_bits=256, data=str_to_bytes(x))
 from hashlib import sha256
 import struct

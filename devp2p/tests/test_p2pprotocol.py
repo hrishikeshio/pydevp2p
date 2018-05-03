@@ -2,9 +2,8 @@ from devp2p.p2p_protocol import P2PProtocol
 from devp2p.service import WiredService
 from devp2p.app import BaseApp
 from devp2p.multiplexer import Packet
-from devp2p.utils import remove_chars
+from devp2p.utils import remove_chars, decode_hex
 import pytest
-from rlp.utils import decode_hex
 # notify peer of successfulll handshake!
 # so other protocols get registered
 # so other protocols can do their handshake

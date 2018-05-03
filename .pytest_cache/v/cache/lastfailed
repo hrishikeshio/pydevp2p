@@ -1,0 +1,6 @@
+{
+  "devp2p/tests/test_full_app.py::TestFullApp::()::test_inc_counter_app[3]": true,
+  "devp2p/tests/test_full_app.py::TestFullApp::()::test_inc_counter_app[6]": true,
+  "devp2p/tests/test_full_app.py::test_app_restart": true,
+  "devp2p/tests/test_full_app.py::test_disconnect": true
+}

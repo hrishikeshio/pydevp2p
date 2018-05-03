@@ -22,7 +22,7 @@ from functools import total_ordering
 from devp2p import slogging
 from .crypto import sha3
 from .utils import big_endian_to_int
-from rlp.utils import encode_hex, is_integer, str_to_bytes
+from devp2p.utils import encode_hex, is_integer, str_to_bytes
 
 log = slogging.get_logger('p2p.discovery.kademlia')
 
